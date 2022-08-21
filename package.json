@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "jinrishici": "^1.0.6",
+    "sass": "^1.54.5",
     "vue": "^3.2.37"
   },
   "devDependencies": {
