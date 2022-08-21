@@ -59,7 +59,7 @@ const initialStyle = () => {
     }
 };
 
-const doAnimate = async (target: keyof typeof selector, index?: number = 0) => {
+const doAnimate = async (target: keyof typeof selector, index: number = 0) => {
     const dom = document.querySelectorAll(selector[target]);
     const animate = dom[index]?.animate(keyframes, animateOptions);
     await animate.finished;
