@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { load, Res } from 'jinrishici';
-import { ref } from 'vue';
+import { load, Res } from "jinrishici";
+import { nextTick, ref } from "vue";
 
-import speak, { nullVoiceError } from './speak';
+import speak, { nullVoiceError } from "./speak";
 
 const poetry = ref<Res | null>(null);
 const reading = ref(false);
 
-load(result => {
+load((result) => {
     console.log(result);
     poetry.value = result;
 });
@@ -18,19 +18,19 @@ const read = async () => {
     if (poetry.value) {
         try {
             initialStyle();
-            doAnimate('title');
+            doAnimate("title");
             await speak(poetry.value.data.origin.title);
-            doAnimate('author');
+            doAnimate("author");
             await speak(poetry.value.data.origin.dynasty);
             await speak(poetry.value.data.origin.author);
             let i = 0;
             for await (const content of poetry.value.data.origin.content) {
-                doAnimate('content', i++);
+                doAnimate("content", i++);
                 await speak(content);
             }
         } catch (e) {
             if (e === nullVoiceError) {
-                alert('未找到可用的语音，换新版 chrome 试试吧');
+                alert("未找到可用的语音，换新版 chrome 试试吧");
             }
         } finally {
             reading.value = false;
@@ -40,21 +40,21 @@ const read = async () => {
 
 const keyframes = [{ opacity: 0.2 }, { opacity: 1 }];
 const animateOptions: KeyframeAnimationOptions = {
-    duration: 1500
+    duration: 1500,
 };
 
 const selector = {
-    title: '.poetry h1',
-    author: '.poetry .author',
-    content: '.poetry article section'
+    title: ".poetry h1",
+    author: ".poetry .author",
+    content: ".poetry article section",
 };
 
 const initialStyle = () => {
     for (const key in selector) {
         const els = document.querySelectorAll(selector[key as keyof typeof selector]);
 
-        els.forEach(el => {
-            (el as HTMLElement).style.opacity = '0';
+        els.forEach((el) => {
+            (el as HTMLElement).style.opacity = "0";
         });
     }
 };
@@ -63,16 +63,18 @@ const doAnimate = async (target: keyof typeof selector, index: number = 0) => {
     const dom = document.querySelectorAll(selector[target]);
     const animate = dom[index]?.animate(keyframes, animateOptions);
     await animate.finished;
-    (dom[index] as HTMLElement).style.opacity = '1';
+    (dom[index] as HTMLElement).style.opacity = "1";
 };
 
 const more = async () => {
     if (reading.value) return;
     window.speechSynthesis.cancel();
-    load(result => {
+    load((result) => {
         console.log(result);
         poetry.value = result;
-        read();
+        nextTick(() => {
+            read();
+        });
     });
 };
 </script>
@@ -100,11 +102,11 @@ const more = async () => {
 
 <style scoped lang="scss">
 @font-face {
-    font-family: 'cfkai';
-    src: url('cfkai.ttf') format('truetype');
+    font-family: "cfkai";
+    src: url("cfkai.ttf") format("truetype");
 }
 .poetry {
-    font-family: 'Weibei SC', STXingkai, 'KaiTi SC', STKaiTi, '黑体', '宋体', 'Xingkai SC';
+    font-family: "Weibei SC", STXingkai, "KaiTi SC", STKaiTi, "黑体", "宋体", "Xingkai SC";
     padding: 1.5rem;
     margin-bottom: 2rem;
 
