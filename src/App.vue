@@ -69,7 +69,6 @@ const more = async () => {
     if (reading.value) return;
     window.speechSynthesis.cancel();
     load((result) => {
-        console.log(result);
         poetry.value = result;
         nextTick(() => {
             read();
