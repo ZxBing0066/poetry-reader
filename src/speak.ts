@@ -32,7 +32,6 @@ async function speak(content: string) {
     const utterThis = new SpeechSynthesisUtterance(content);
 
     utterThis.onend = function (event) {
-        console.log('SpeechSynthesisUtterance.onend');
         ready();
     };
 

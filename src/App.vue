@@ -8,7 +8,6 @@ const poetry = ref<Res | null>(null);
 const reading = ref(false);
 
 load((result) => {
-    console.log(result);
     poetry.value = result;
 });
 
