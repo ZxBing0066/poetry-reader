@@ -61,6 +61,7 @@ const initialStyle = () => {
 const doAnimate = async (target: keyof typeof selector, index: number = 0) => {
     const dom = document.querySelectorAll(selector[target]);
     const animate = dom[index]?.animate(keyframes, animateOptions);
+    dom[index]?.scrollIntoView({ block: "center", behavior: "smooth" });
     await animate.finished;
     (dom[index] as HTMLElement).style.opacity = "1";
 };
@@ -84,15 +85,17 @@ const more = async () => {
                 {{ poetry.data.origin.title }}
             </h1>
             <p class="author">
-                {{ poetry.data.origin.dynasty }}
-                {{ poetry.data.origin.author }}
+                <span>
+                    {{ poetry.data.origin.dynasty }}
+                    {{ poetry.data.origin.author }}
+                </span>
             </p>
             <article>
                 <section v-for="_content in poetry.data.origin.content">{{ _content }}</section>
             </article>
         </div>
     </main>
-    <div class="btn-group" v-if="!reading">
+    <div class="btn-group" v-bind:style="reading ? { visibility: 'hidden', pointerEvents: 'none' } : {}">
         <button @click="read">开始朗诵</button>
         <button @click="more">再来一首</button>
     </div>
@@ -108,15 +111,16 @@ const more = async () => {
     padding: 1.5rem;
     margin-bottom: 2rem;
 
-    p.author {
+    p.author span {
         font-size: 1.4rem;
-        color: #333;
+        opacity: 0.8;
     }
     article {
         font-size: 1.6rem;
     }
     section {
         margin-bottom: 0.5em;
+        word-break: keep-all;
     }
 
     h1 {
@@ -125,9 +129,13 @@ const more = async () => {
         margin-bottom: 0.75em;
     }
 }
+section {
+    line-height: 1.1;
+}
 .btn-group {
     button + button {
         margin-left: 1em;
     }
+    padding-bottom: 2rem;
 }
 </style>
