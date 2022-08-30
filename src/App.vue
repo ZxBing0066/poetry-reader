@@ -106,8 +106,12 @@ const more = async () => {
     font-family: "cfkai";
     src: url("cfkai.ttf") format("truetype");
 }
+@font-face {
+    font-family: "Weibei-C";
+    src: url("weibei-bold.otf");
+}
 .poetry {
-    font-family: "Weibei SC", STXingkai, "KaiTi SC", STKaiTi, "黑体", "宋体", "Xingkai SC";
+    font-family: "Weibei SC", "Weibei-C", STXingkai, "KaiTi SC", STKaiTi, "黑体", "宋体", "Xingkai SC";
     padding: 1.5rem;
     margin-bottom: 2rem;
 
