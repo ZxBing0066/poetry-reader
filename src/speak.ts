@@ -1,4 +1,4 @@
-import pendingFactory from './pendingFactory';
+import pendingFactory from "./pendingFactory";
 
 const synth = window.speechSynthesis;
 
@@ -6,7 +6,7 @@ let chineseVoice: SpeechSynthesisVoice | null = null;
 
 const updateVoice = () => {
     const voices = synth.getVoices();
-    const _chineseVoice = voices.filter(v => v.lang === 'zh-CN')[0];
+    const _chineseVoice = voices.filter((v) => v.lang === "zh-CN")[0];
     chineseVoice = _chineseVoice;
 };
 
@@ -16,27 +16,36 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = updateVoice;
 }
 
-export const nullVoiceError = new Error('chineseVoice is null');
+export const nullVoiceError = new Error("chineseVoice is null");
 
 async function speak(content: string) {
+    console.log(`speak: ${content}`);
+
     const [pending, ready, error] = pendingFactory();
     if (synth.speaking) {
-        console.warn('speechSynthesis.speaking');
+        console.warn("speechSynthesis.speaking");
         return;
     }
     if (!chineseVoice) {
-        console.error('chineseVoice is null');
+        console.error("chineseVoice is null");
         throw nullVoiceError;
     }
 
     const utterThis = new SpeechSynthesisUtterance(content);
 
+    // (["onstart", "onboundary", "onpause", "onmark", "onresume"] as (keyof typeof utterThis)[]).forEach((eventName) => {
+    //     utterThis[eventName] = ((e: any) => {
+    //         console.log(eventName, e);
+    //     }) as unknown as never;
+    // });
+
     utterThis.onend = function (event) {
+        console.log("speak end");
         ready();
     };
 
     utterThis.onerror = function (event) {
-        console.error('SpeechSynthesisUtterance.onerror', event);
+        console.error("SpeechSynthesisUtterance.onerror", event);
         error(event);
     };
 
